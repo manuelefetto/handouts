@@ -75,8 +75,4 @@ public class SearchClient {
     // converto la lista di interi in un array di interi statico e converto il primo argomento da linea di comando in int
     System.out.println(search(numeri.stream().mapToInt((i)->i).toArray(),Integer.parseInt(args[0])));
   }
-// REQUIRES: a is sorted
-// EFFECTS: If a is null throws NullPointerException; else if x is not
-// in a, throws NotFoundException; else returns i such that a[i] = x.
-
 }
