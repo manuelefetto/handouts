@@ -21,6 +21,11 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 package it.unimi.di.prog2.e06;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
 /** Esercizio 4.3 di PDJ. */
 public class SumClient {
 
@@ -30,4 +35,37 @@ public class SumClient {
   // Il main di questa classe legge dal flusso di ingresso una sequenza di al
   // più 100 interi e ne emette la somma nel flusso d'uscita.
 
+  /** Calcola e restituisce la somma degli elementi di un vettore
+   *
+   *
+   * @param a l'array di cui fare la somma
+   * @return la somma degli elementi dell'array {@code a} o 0 se {@code a} è vuoto
+   * @throws NullPointerException se {@code a} è {@code null}
+   */
+  public static int sum(int[] a) throws  NullPointerException{
+    if(a == null){
+      throw new NullPointerException("a è null");
+    }
+
+    int somma = 0;
+
+    for (int n : a)
+      somma += n;
+
+    return somma;
+
+  }
+
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+
+    ArrayList<Integer> numeri = new ArrayList<>();
+
+    while (s.hasNextInt()){
+      numeri.add(s.nextInt());
+    }
+
+    System.out.println(sum(numeri.stream().mapToInt((i)->i).toArray()));
+
+  }
 }

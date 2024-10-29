@@ -104,7 +104,6 @@ spotless {
     removeUnusedImports()
     indentWithSpaces(2)
     endWithNewline()
-    licenseHeaderFile 'src/licenseHeaderFile.txt'
   }
 }
 
