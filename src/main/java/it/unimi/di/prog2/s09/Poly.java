@@ -49,6 +49,7 @@ public class Poly { // we don't extend Cloneable, see EJ 3.13
   public Poly(int c, int n) throws NegativeExponentException {
     if (n < 0)
       throw new NegativeExponentException("Can't create a monomial with negative exponent");
+    if (c == 0) n = 0;
     coefficient = new int[n + 1];
     coefficient[n] = c;
   }

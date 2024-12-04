@@ -19,26 +19,26 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-package it.unimi.di.prog2.e03;
+package it.unimi.di.prog2.e17;
 
-/**
- * Vedi <a
- * href="https://github.com/mapio/labprog/blob/master/esercizi/lettera_piu_frequente/Testo.md">testo</a>,
- */
-public class LetteraPiùFrequente {
+/** A mutable class representing a square with integer valued base. */
+public class Square extends Rectangle {
 
-  /** . */
-  private LetteraPiùFrequente() {}
+  /*-
+    Decide, if needed, what fields to use to represent a
+    square and provide the AF and IR.
 
-  /*- Completa il seguente main
+    Check the specification, possibly adding missing exceptions.
 
-  public static void main(String[] args) {
-    try (Scanner s = new Scanner(System.in)) {
-      while (s.hasNext()) {
-        final String parola = s.nextLine();
-      }
-    }
-  }
-
+    Finish the implementation of the class.
   */
+
+  /**
+   * Creates a rectangle of given base and height.
+   *
+   * @param base the base of the rectangle.
+   */
+  public Square(final int base) {
+    super(base, base);
+  }
 }

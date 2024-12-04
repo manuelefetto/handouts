@@ -36,12 +36,12 @@ import java.util.Objects;
 public class SparsePoly {
 
   /**
-   * A record holding a term of the polynomial.
+   * A record holding a non-zero term of the polynomial.
    *
-   * @param coeff the coefficient.
+   * @param coefficient the coefficient.
    * @param degree the degree.
    */
-  public record Term(int coeff, int degree) {
+  public record Term(int coefficient, int degree) {
     /**
      * Builds a term.
      *
@@ -50,10 +50,12 @@ public class SparsePoly {
     public Term { // using the compact constructor
       if (degree < 0)
         throw new NegativeExponentException("A term cannot have a negative exponent.");
+      if (coefficient == 0)
+        throw new IllegalArgumentException("A term cannot have a zero coefficient.");
     }
   }
 
-  /** The array of terms (in increasing non-zero degree). */
+  /** The array of terms (in increasing degree). */
   private final List<Term> terms;
 
   /** Initializes this to be the zero polynomial, that is \( p = 0 \). */
@@ -83,14 +85,18 @@ public class SparsePoly {
   }
 
   /**
-   * Finds the index of a term of given degree in a list of terms.
+   * Finds the index of a term of given degree in a list of terms in increasing degree order.
    *
-   * @param lst the not {@code null} list of not {@code null} terms.
+   * @param lst the not {@code null} list of not {@code null} terms and in increasing degree order.
    * @param d the degree.
    * @return the index of a term of given degree, or -1 if none is present.
    */
   private static int findByDegree(List<Term> lst, int d) {
-    for (int i = 0; i < lst.size(); i++) if (lst.get(i).degree == d) return i;
+    for (int i = 0; i < lst.size(); i++) {
+      final int degree = lst.get(i).degree;
+      if (degree == d) return i;
+      if (degree > d) return -1;
+    }
     return -1;
   }
 
@@ -103,7 +109,7 @@ public class SparsePoly {
   public int coeff(int d) {
     if (d < 0 || d > degree()) return 0;
     int i = findByDegree(terms, d);
-    return i != -1 ? terms.get(i).coeff : 0;
+    return i != -1 ? terms.get(i).coefficient : 0;
   }
 
   /**
@@ -113,7 +119,7 @@ public class SparsePoly {
    *     Poly}.
    */
   public int degree() {
-    return terms.isEmpty() ? 0 : terms.get(terms.size() - 1).degree;
+    return terms.isEmpty() ? 0 : terms.getLast().degree;
   }
 
   /**
@@ -126,10 +132,10 @@ public class SparsePoly {
    * @param term the not {@code null} term.
    */
   private static void addTerm(List<Term> lst, Term term) {
-    if (term.coeff == 0) return;
+    if (term.coefficient == 0) return;
     int i = findByDegree(lst, term.degree);
     if (i != -1) {
-      int c = lst.get(i).coeff + term.coeff;
+      int c = lst.get(i).coefficient + term.coefficient;
       if (c != 0) lst.set(i, new Term(c, term.degree));
       else lst.remove(i);
     } else {
@@ -148,7 +154,7 @@ public class SparsePoly {
    * @throws NullPointerException if {@code q} is {@code null}.
    */
   public SparsePoly add(SparsePoly q) throws NullPointerException {
-    Objects.requireNonNull(q);
+    Objects.requireNonNull(q, "The polynomial to add cannot be null.");
     List<Term> result = new LinkedList<>(this.terms);
     for (Term t : q.terms) addTerm(result, t);
     return new SparsePoly(result);
@@ -164,10 +170,11 @@ public class SparsePoly {
    * @throws NullPointerException if {@code q} is {@code null}.
    */
   public SparsePoly mul(SparsePoly q) throws NullPointerException {
-    Objects.requireNonNull(q);
+    Objects.requireNonNull(q, "The polynomial to multiply cannot be null.");
     List<Term> lst = new LinkedList<>();
     for (Term tq : q.terms)
-      for (Term tt : terms) addTerm(lst, new Term(tq.coeff * tt.coeff, tq.degree + tt.degree));
+      for (Term tt : terms)
+        addTerm(lst, new Term(tq.coefficient * tt.coefficient, tq.degree + tt.degree));
     return new SparsePoly(lst);
   }
 
@@ -181,7 +188,7 @@ public class SparsePoly {
    * @throws NullPointerException if {@code q} is {@code null}.
    */
   public SparsePoly sub(SparsePoly q) throws NullPointerException {
-    Objects.requireNonNull(q);
+    Objects.requireNonNull(q, "The polynomial to subtract cannot be null.");
     return add(q.minus());
   }
 
@@ -194,7 +201,7 @@ public class SparsePoly {
    */
   public SparsePoly minus() {
     List<Term> lst = new LinkedList<>();
-    for (Term t : terms) lst.add(new Term(-t.coeff, t.degree));
+    for (Term t : terms) lst.add(new Term(-t.coefficient, t.degree));
     return new SparsePoly(lst);
   }
 }

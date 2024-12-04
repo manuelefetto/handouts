@@ -46,7 +46,7 @@ public class PolyClient {
         Poly term = new Poly(s.nextInt(), s.nextInt());
         result = result.add(term);
       }
-      for (int d = 0; d <= result.degree(); d++) System.out.println(result.coeff(d) + " " + d);
     }
+    for (int d = 0; d <= result.degree(); d++) System.out.println(result.coeff(d) + " " + d);
   }
 }
